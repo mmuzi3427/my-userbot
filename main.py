@@ -58,6 +58,7 @@ app = Client(
 def check_channel_post(client: Client, message: Message):
     if message.text and "Bonus olish boshlandi" in message.text:
         print("🚀 Kanalda bonus posti topildi! Botga /start bonus yuborilmoqda...")
+        client.read_chat_history(message.chat.id)
         client.send_message(BOT_USERNAME, "/start bonus")
 
 # 2-BOSQICH: Botdan kelgan javob va tugmalarni qayta ishlash
