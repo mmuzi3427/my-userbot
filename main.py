@@ -1,10 +1,14 @@
 import os
 import re
+import time
 import threading
+import random
 from flask import Flask
 from pyrogram import Client, filters
 from pyrogram.types import Message
-
+bonus_ol = True
+saqlangan_son = 4
+max_s1 = random.randint(1, max_s)
 # 1. Flask (Render uchilmasligi uchun Web Server)
 web_app = Flask(__name__)
 
@@ -85,6 +89,7 @@ def handle_bot_response(client: Client, message: Message):
                         print(f"✅ Tugma bosilmoqda: {button.text}")
                         # Tugmani bosish (Callback query yuborish)
                         try:
+                            time.sleep(max_s1)
                             message.click(button.text)
                         except Exception as e:
                             print(f"❌ Tugmani bosishda xatolik: {e}")
@@ -95,5 +100,41 @@ def handle_bot_response(client: Client, message: Message):
 def ping_pong(_, message):
     message.edit_text("🏓 **Bonus Userbot faol va ishlamoqda!**")
 
+@app.on_message(filters.me & filters.command("on", prefixes="."))
+def ping_pong(_, message):
+    global bonus_ol
+    if bonus_ol == False:
+        bonus_ol = True
+        message.edit_text("✅ Bonus olishni boshladim!")
+    else:
+        message.edit_text("✅ Allaqachon yoqilgan!")
+
+# Olingan sonni saqlash uchun global o'zgaruvchi
+
+
+@app.on_message(filters.me & filters.command("son", prefixes="."))
+def save_number(_, message: Message):
+    global saqlangan_son
+    
+    # message.command -> ['.son', '45'] ko'rinishida ajratib beradi
+    if len(message.command) > 1:
+        qiymat = message.command[1] # Buyruqdan keyingi matn (masalan, "45")
+        
+        if qiymat.isdigit(): # Faqat raqamlardan iboratligini tekshirish
+            saqlangan_son = int(qiymat)
+            message.edit_text(f"✅ **Son saqlandi:** `{saqlangan_son}`")
+        else:
+            message.edit_text("❌ **Xatolik:** Iltimos, faqat raqam kiriting!")
+    else:
+        message.edit_text("⚠️ **Format:** `.son 45` ko'rinishida yuboring.")
+                
+@app.on_message(filters.me & filters.command("off", prefixes="."))
+def ping_pong(_, message):
+    global bonus_ol
+    if bonus_ol == True:
+        bonus_ol = False
+        message.edit_text("❌ Bonus olishni toʼxtatdim!")
+    else:
+        message.edit_text("❌ Allaqachon o'chirilgan!")
 print("Bonus Userbot ishga tushdi...")
 app.run()
