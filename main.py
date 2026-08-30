@@ -8,7 +8,7 @@ from pyrogram import Client, filters
 from pyrogram.types import Message
 bonus_ol = True
 saqlangan_son = 4
-max_s1 = random.randint(1, max_s)
+max_s1 = random.randint(1, saqlangan_son)
 # 1. Flask (Render uchilmasligi uchun Web Server)
 web_app = Flask(__name__)
 
