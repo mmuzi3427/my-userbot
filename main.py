@@ -116,7 +116,7 @@ def register_handlers(app: Client, is_main_account: bool):
                             return
 
     # 3-BOSQICH: Boshqaruv komandalari (Faqat STRING_SESSION_1 egasi bo'lgan Asosiy akkaunt uchun)
-    if is_main_account:
+    if is_main_account or not is_main_account:
         @app.on_message(filters.me & filters.command("ping", prefixes="."))
         async def ping_pong(_, message: Message):
             await message.edit_text(f"🏓 **Bonus Userbot faol!**\n👥 Faol akkauntlar soni: `{len(clients)}` ta")
