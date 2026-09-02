@@ -70,7 +70,7 @@ def register_handlers(app: Client, is_main_account: bool):
             return
             
         if message.text and "Bonus olish boshlandi" in message.text:
-            print(f"🚀 [{client.name}] Kanalda bonus posti topildi! /start bonus yuborilmoqda...")
+            #print(f"🚀 [{client.name}] Kanalda bonus posti topildi! /start bonus yuborilmoqda...")
             try:
                 await client.read_chat_history(message.chat.id)
             except Exception:
@@ -96,7 +96,7 @@ def register_handlers(app: Client, is_main_account: bool):
             for fruit_name, emoji in FRUIT_MAP.items():
                 if fruit_name in text_lower:
                     target_emoji = emoji
-                    print(f"🎯 [{client.name}] So'ralgan meva: {fruit_name} -> {emoji}")
+                    #print(f"🎯 [{client.name}] So'ralgan meva: {fruit_name} -> {emoji}")
                     break
             
             if target_emoji:
@@ -105,14 +105,14 @@ def register_handlers(app: Client, is_main_account: bool):
                         if button.text and target_emoji in button.text:
                             # Asinxron kutish (time.sleep o'rniga)
                             wait_time = random.randint(1, saqlangan_son) if saqlangan_son >= 1 else 1
-                            print(f"⏳ [{client.name}] {wait_time} soniya kutilmoqda...")
+                            #print(f"⏳ [{client.name}] {wait_time} soniya kutilmoqda...")
                             await asyncio.sleep(wait_time)
                             
-                            print(f"✅ [{client.name}] Tugma bosilmoqda: {button.text}")
+                            #print(f"✅ [{client.name}] Tugma bosilmoqda: {button.text}")
                             try:
                                 await message.click(button.text)
                             except Exception as e:
-                                print(f"❌ [{client.name}] Tugmani bosishda xatolik: {e}")
+                                #print(f"❌ [{client.name}] Tugmani bosishda xatolik: {e}")
                             return
 
     # 3-BOSQICH: Boshqaruv komandalari (Faqat STRING_SESSION_1 egasi bo'lgan Asosiy akkaunt uchun)
