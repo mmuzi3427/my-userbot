@@ -164,17 +164,16 @@ def register_handlers(app: Client):
                 for row in message.reply_markup.inline_keyboard:
                     for button in row:
                         if button.text and target_emoji in button.text:
-                            # Kutishni 0-2 soniya oralig'ida qilamiz
-                            base_wait = random.uniform(0.3, 1.5)
-                            log_print(f"⏳ [{client.name}] {base_wait:.1f} soniya kutilmoqda...")
+                            # 0.2 - 0.8 soniya kichik tasodifiy kutilish
+                            base_wait = random.uniform(0.2, 0.8)
+                            log_print(f"⏳ [{client.name}] {base_wait:.1f}s kutilmoqda...")
                             await asyncio.sleep(base_wait)
                             
                             log_print(f"✅ [{client.name}] Tugma bosilmoqda: {button.text}")
                             try:
-                                # timeout parameter qo'shildi (tarmoq qotib qolmasligi uchun)
-                                await asyncio.wait_for(message.click(button.text), timeout=8.0)
-                            except asyncio.TimeoutError:
-                                log_print(f"❌ [{client.name}] Tugma bosish vaqti tugadi (Timeout)!")
+                                # timeout-ni olib tashlaymiz va callback-ni to'g'ridan-to'g'ri yuboramiz
+                                await message.click(button.text, timeout=30)
+                                log_print(f"🎉 [{client.name}] Tugma muvaffaqiyatli bosildi!")
                             except Exception as e:
                                 log_print(f"❌ [{client.name}] Tugmani bosishda xatolik: {e}")
                             return
