@@ -108,7 +108,7 @@ for i, s_str in enumerate(sessions):
 
 def register_handlers(app: Client):
     
-    # 1-BOSQICH: Kanalga post kelishini kuzatish
+    # 1-BOSQICH: Kanalga post kelishini kuzatish (Tezkor va xavfsiz)
     @app.on_message(filters.chat(KANAL_USERNAME))
     async def check_channel_post(client: Client, message: Message):
         global bonus_ol
@@ -121,8 +121,9 @@ def register_handlers(app: Client):
             except Exception:
                 acc_index = 0
 
-            delay = acc_index * 2.5
-            log_print(f"🚀 [{client.name}] Post topildi! {delay}s kutilmoqda...")
+            # Kutilishni 0.7 soniyaga tushiramiz (0s, 0.7s, 1.4s, 2.1s)
+            delay = acc_index * 0.7
+            log_print(f"🚀 [{client.name}] Post topildi! {delay:.1f}s kutilmoqda...")
             
             await asyncio.sleep(delay)
             
@@ -163,16 +164,21 @@ def register_handlers(app: Client):
                 for row in message.reply_markup.inline_keyboard:
                     for button in row:
                         if button.text and target_emoji in button.text:
-                            base_wait = random.randint(1, saqlangan_son) if saqlangan_son >= 1 else 1
-                            log_print(f"⏳ [{client.name}] {base_wait} soniya kutilmoqda...")
+                            # Kutishni 0-2 soniya oralig'ida qilamiz
+                            base_wait = random.uniform(0.3, 1.5)
+                            log_print(f"⏳ [{client.name}] {base_wait:.1f} soniya kutilmoqda...")
                             await asyncio.sleep(base_wait)
                             
                             log_print(f"✅ [{client.name}] Tugma bosilmoqda: {button.text}")
                             try:
-                                await message.click(button.text)
+                                # timeout parameter qo'shildi (tarmoq qotib qolmasligi uchun)
+                                await asyncio.wait_for(message.click(button.text), timeout=8.0)
+                            except asyncio.TimeoutError:
+                                log_print(f"❌ [{client.name}] Tugma bosish vaqti tugadi (Timeout)!")
                             except Exception as e:
                                 log_print(f"❌ [{client.name}] Tugmani bosishda xatolik: {e}")
                             return
+
 
     # 3-BOSQICH: Boshqaruv komandalari
     @app.on_message(filters.me & filters.command("ping", prefixes="."))
